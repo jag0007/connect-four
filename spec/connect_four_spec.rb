@@ -1,3 +1,5 @@
+require './lib/gameboard'
+
 class TurnBasedGame
   def initialize(game, players)
     @game = game
@@ -28,24 +30,6 @@ class ConnectFour
   end
 end
 
-class GameBoard
-  def initialize(rows = 6, columns = 7)
-    @board = Array.new(columns, Array.new(rows))
-  end
-
-  def slot_empty?(row, column)
-    @board[column][row].nil?
-  end
-
-  def get_checker(row, column)
-    @board[column][row]
-  end
-
-  def play_checker(column, token)
-    @board[@board.index { |x| !x.nil?}] = token 
-  end
-
-end
 
 describe GameBoard do
   describe "NewGameBoard" do
@@ -57,11 +41,18 @@ describe GameBoard do
   end
 
   describe "play_checker" do 
-    new_board = GameBoard.new
 
     it "should add token to bottom of empty column" do
+      new_board = GameBoard.new
       new_board.play_checker(0, 'x')
       expect(new_board.get_checker(0,0)).to eql('x')
+    end
+
+    it "should stack checker when column not empty" do
+      new_board = GameBoard.new
+      new_board.play_checker(0, 'x')
+      new_board.play_checker(0, 'y')
+      expect(new_board.get_checker(1,0)).to eql('y')
     end
   end
 end
