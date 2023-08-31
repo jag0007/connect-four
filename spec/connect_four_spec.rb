@@ -54,5 +54,38 @@ describe GameBoard do
       new_board.play_checker(0, 'y')
       expect(new_board.get_checker(1,0)).to eql('y')
     end
+
+    it "should throw exception if board would overflow" do
+      new_board = GameBoard.new
+      expect {7.times.each { new_board.play_checker(0, 'x')}}.to raise_error(ColumnFull)
+    end
+  end
+
+  describe "player_win?" do
+    it "should return false if no four in a row found" do
+      new_board = GameBoard.new
+      expect(new_board.player_win?).to eql(false)
+    end
+
+    it "should return token if four found on diagonal" do
+      new_board = GameBoard.new
+      3.times.each { new_board.play_checker(3, 'x')}
+      4.times.each { new_board.play_checker(4, 'x')}
+      5.times.each { new_board.play_checker(5, 'x')}
+      6.times.each { new_board.play_checker(6, 'x')}
+      expect(new_board.player_win?).to eql('x')
+    end
+
+    it "should return token if four found on row" do
+      new_board = GameBoard.new
+      4.times { |column| new_board.play_checker(column, 'x')}
+      expect(new_board.player_win?).to eql('x')
+    end
+
+    it "should return token if four found on column" do 
+      new_board = GameBoard.new
+      4.times { new_board.play_checker(0, 'x')}
+      expect(new_board.player_win?).to eql('x')
+    end
   end
 end
